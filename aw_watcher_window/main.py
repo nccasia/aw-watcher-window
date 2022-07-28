@@ -41,15 +41,20 @@ def main():
         background_ensure_permissions()
 
     client = ActivityWatchClient("aw-watcher-window", testing=args.testing)
+    if client.localToken is None:
+        logger.info("No local token found, quitting")
+        exit()
+        
+    if client.is_authenticated:
+        bucket_id = "{}_{}".format(client.client_name, client.client_hostname)
 
-    bucket_id = "{}_{}".format(client.client_name, client.client_hostname)
     event_type = "currentwindow"
 
     client.create_bucket(bucket_id, event_type, queued=True)
 
     logger.info("aw-watcher-window started")
 
-    sleep(1)  # wait for server to start
+    sleep(5)  # wait for server to start
     with client:
         heartbeat_loop(
             client,
