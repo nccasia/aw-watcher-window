@@ -45,7 +45,7 @@ def main():
         logger.info("No local token found, quitting")
         exit()
         
-    if client.is_authenticated:
+    if client.auth_status == "Success":
         bucket_id = "{}_{}".format(client.client_name, client.client_hostname)
 
     event_type = "currentwindow"
